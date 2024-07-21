@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gz.desafio_gz.entity.InstrumentQuote;
 import com.gz.desafio_gz.service.InstrumentQuoteService;
+import com.gz.desafio_gz.service.UserTradeService;
 
 @RestController
 @RequestMapping("/instrumentQuote")
@@ -31,12 +32,13 @@ public class InstrumentQuoteController {
 
     @GetMapping
     public ResponseEntity<List<InstrumentQuote>> getAll() {
-        var processos = instrumentQuoteService.getAll();
-        return ResponseEntity.ok(processos);
+        var instrumentQuoteResp = instrumentQuoteService.getAll();
+        return ResponseEntity.ok(instrumentQuoteResp);
     }
 
     @GetMapping(value = "/listarPaginado/{inicio}/{qtd}")
-    public ResponseEntity<List<InstrumentQuote>> listarProcessosPaginado(@PathVariable(value = "inicio") int inicio,
+    public ResponseEntity<List<InstrumentQuote>> listarinstrumentQuoteRespPaginado(
+            @PathVariable(value = "inicio") int inicio,
             @PathVariable(value = "qtd") int qtd) {
 
         PageRequest pageRequest = PageRequest.of(
@@ -45,13 +47,21 @@ public class InstrumentQuoteController {
                 Sort.Direction.DESC,
                 "simbol");
 
-        var processos = instrumentQuoteService.findAllPaginado(pageRequest);
-        return ResponseEntity.ok(processos);
+        var instrumentQuoteResp = instrumentQuoteService.findAllPaginado(pageRequest);
+        return ResponseEntity.ok(instrumentQuoteResp);
     }
 
     @GetMapping(value = "/listarQtdTotal")
     public ResponseEntity<Long> listarQtdTotal() {
         return ResponseEntity.ok(instrumentQuoteService.listarQtdTotal());
+    }
+
+    @GetMapping(value = "/listarPorInstrumenteeData/{acao}/{dia}")
+    public ResponseEntity<List<InstrumentQuote>> listarPorInstrumenteeData(
+            @PathVariable(value = "acao") String acao,
+            @PathVariable(value = "dia") String dia) {
+        var instrumentQuoteResp = instrumentQuoteService.listarPorInstrumenteeData(acao, dia);
+        return ResponseEntity.ok(instrumentQuoteResp);
     }
 
 }
