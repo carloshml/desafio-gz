@@ -10,48 +10,48 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gz.desafio_gz.entity.InstrumentQuote;
-import com.gz.desafio_gz.service.InstrumentQuoteService;
+import com.gz.desafio_gz.entity.UserTrade;
+import com.gz.desafio_gz.service.UserTradeService;
 
 @RestController
-@RequestMapping("/instrumentQuote")
-public class InstrumentQuoteController {
+@RequestMapping("/userTrade")
+public class UserTradeController {
 
-    InstrumentQuoteService instrumentQuoteService;
+    UserTradeService UserTradeService;
 
-    public InstrumentQuoteController(InstrumentQuoteService iqs) {
-        instrumentQuoteService = iqs;
+    public UserTradeController(UserTradeService iqs) {
+        UserTradeService = iqs;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InstrumentQuote> getById(@PathVariable Long id) {
-        var instrument = instrumentQuoteService.getById(id);
+    public ResponseEntity<UserTrade> getById(@PathVariable Long id) {
+        var instrument = UserTradeService.getById(id);
         return ResponseEntity.ok(instrument);
     }
 
     @GetMapping
-    public ResponseEntity<List<InstrumentQuote>> getAll() {
-        var processos = instrumentQuoteService.getAll();
+    public ResponseEntity<List<UserTrade>> getAll() {
+        var processos = UserTradeService.getAll();
         return ResponseEntity.ok(processos);
     }
 
     @GetMapping(value = "/listarPaginado/{inicio}/{qtd}")
-    public ResponseEntity<List<InstrumentQuote>> listarProcessosPaginado(@PathVariable(value = "inicio") int inicio,
+    public ResponseEntity<List<UserTrade>> listarProcessosPaginado(@PathVariable(value = "inicio") int inicio,
             @PathVariable(value = "qtd") int qtd) {
 
         PageRequest pageRequest = PageRequest.of(
                 inicio,
                 qtd,
                 Sort.Direction.DESC,
-                "simbol");
+                "data");
 
-        var processos = instrumentQuoteService.findAllPaginado(pageRequest);
+        var processos = UserTradeService.findAllPaginado(pageRequest);
         return ResponseEntity.ok(processos);
     }
 
     @GetMapping(value = "/listarQtdTotal")
     public ResponseEntity<Long> listarQtdTotal() {
-        return ResponseEntity.ok(instrumentQuoteService.listarQtdTotal());
+        return ResponseEntity.ok(UserTradeService.listarQtdTotal());
     }
 
 }
