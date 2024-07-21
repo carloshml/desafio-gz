@@ -55,13 +55,10 @@ public class UserTradeController {
         return ResponseEntity.ok(UserTradeService.listarQtdTotal());
     }
 
-
-    @GetMapping(value = "/listarPorInstrumenteeDataTotal/{acao}/{dia}/{page}/{qtd}")
+    @GetMapping(value = "/listarPorInstrumenteeDataTotal/{acao}/{dia}")
     public ResponseEntity<Long> listarPorInstrumenteeDataTotal(
             @PathVariable(value = "acao") String acao,
-            @PathVariable(value = "dia") String dia,
-            @PathVariable(value = "page") int page,
-            @PathVariable(value = "qtd") int qtd) {
+            @PathVariable(value = "dia") String dia) {
         var processos = UserTradeService.listarPorInstrumenteeDataTotal(acao, dia);
         return ResponseEntity.ok(processos);
     }
