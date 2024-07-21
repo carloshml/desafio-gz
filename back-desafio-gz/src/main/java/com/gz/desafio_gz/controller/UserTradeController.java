@@ -63,8 +63,8 @@ public class UserTradeController {
         return ResponseEntity.ok(userTradeResp);
     }
 
-    @GetMapping(value = "/listarAcoesNegociadas/")
-    public ResponseEntity<Long> listarAcoesNegociadas() {
+    @GetMapping(value = "/listarAcoesNegociadas")
+    public ResponseEntity<List<String>> listarAcoesNegociadas() {
         var userTradeResp = UserTradeService.listarAcoesNegociadas();
         return ResponseEntity.ok(userTradeResp);
     }

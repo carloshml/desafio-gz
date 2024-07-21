@@ -1,8 +1,5 @@
 package com.gz.desafio_gz.service;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -49,6 +46,9 @@ public class UserTradeService {
 
     public List<UserTrade> listarPorInstrumenteeData(String instrument, String date, int page, int pageSize) {
         PageRequest pageRequest = PageRequest.of(page, pageSize);
+        if (instrument.equals("todas")) {
+            instrument = "%";
+        }
         Page<UserTrade> userTradesPage = userTradeRepositoryRepository.listarPorInstrumenteeData(instrument,
                 util.stringToLocalDate(date),
                 pageRequest);
@@ -56,6 +56,14 @@ public class UserTradeService {
     }
 
     public Long listarPorInstrumenteeDataTotal(String instrument, String date) {
+        if (instrument.equals("todas")) {
+            instrument = "%";
+        }
         return userTradeRepositoryRepository.listarPorInstrumenteeDataTotal(instrument, util.stringToLocalDate(date));
+
+    }
+
+    public List<String> listarAcoesNegociadas() {
+        return userTradeRepositoryRepository.listarAcoesNegociadas().get();
     }
 }

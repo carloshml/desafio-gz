@@ -24,18 +24,6 @@ export class UserTradeService {
         );
     }
 
-    // 2020-04-22
-    listarPorDia(acao: string, dia: string, inicio: number, quantidade: number) {
-        return lastValueFrom(
-            this.http
-                .get<any>(`${this.API}/listarPorDia/${acao}/${dia}/${inicio}/${quantidade}`)
-                .pipe(
-                    catchError(e => throwError(() => this.handleErrorRequisicao(e)))
-                )
-        );
-    }
-
-
     listarQtdTotal() {
         return lastValueFrom(
             this.http
@@ -56,18 +44,56 @@ export class UserTradeService {
         );
     }
 
-    listarPaginado(inicio: number, quantidade: number) {
+
+    private handleErrorRequisicao(e: any) {
+        return e.error;
+    }
+
+    /**
+    * @param acao 
+    * @param data  yyyy-mm-dd
+    * @param page  min = 0
+    * @param quantidade
+   */
+    listarPorInstrumenteeData(acao: string, data: string, page: number, quantidade: number) {
         return lastValueFrom(
+
             this.http
-                .get<any>(`${this.API}/listarPaginado/${inicio}/${quantidade}`)
+                .get<any>(`${this.API}/listarPorInstrumenteeData/${acao}/${data}/${page}/${quantidade}`)
                 .pipe(
                     catchError(e => throwError(() => this.handleErrorRequisicao(e)))
                 )
         );
     }
 
-    private handleErrorRequisicao(e: any) {
-        return e.error;
+    /**
+  * @param acao 
+  * @param data  yyyy-mm-dd
+  * @param page  min = 0
+  * @param quantidade
+ */
+    listarPorInstrumenteeDataTotal(acao: string, data: string, page: number, quantidade: number) {
+        return lastValueFrom(
+
+            this.http
+                .get<any>(`${this.API}/listarPorInstrumenteeDataTotal/${acao}/${data} `)
+                .pipe(
+                    catchError(e => throwError(() => this.handleErrorRequisicao(e)))
+                )
+        );
     }
+
+
+    listarAcoesNegociadas() {
+        return lastValueFrom(
+
+            this.http
+                .get<any>(`${this.API}/listarAcoesNegociadas`)
+                .pipe(
+                    catchError(e => throwError(() => this.handleErrorRequisicao(e)))
+                )
+        );
+    } 
+
 }
 

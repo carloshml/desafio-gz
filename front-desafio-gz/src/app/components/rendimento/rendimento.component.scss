@@ -1,0 +1,27 @@
+.acao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 4px 2px 4px;
+    border-radius: 4px;
+    padding: 19px 5px;
+    border: 2px solid #0fcbea;
+    font-size: 20px;
+}
+
+.acao-selecionada {
+    background: #0fcbea;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-atualizar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 4px 2px 4px;
+    border-radius: 4px;
+    padding: 16px  5px;  
+    font-size: 20px;
+    border: none;
+}

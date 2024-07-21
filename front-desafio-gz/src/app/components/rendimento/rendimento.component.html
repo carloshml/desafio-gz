@@ -1,0 +1,59 @@
+<section class="painel">
+    <form [formGroup]="form" (ngSubmit)="atualizar()">
+        <section>
+            <h2>Ações na carteira</h2>
+            <mat-progress-bar *ngIf="procurando" mode="indeterminate"></mat-progress-bar>
+            <div class="row  ">
+                @for (acao of listaAcoes; track acao) {
+                <a class="acao col det-20 " [ngClass]="{'acao-selecionada': acao == this.form.get('acao')?.value }"
+                    (click)="selecionarAcao(acao)">{{acao}}</a>
+                }
+                <a class="acao col det-20 " [ngClass]="{'acao-selecionada': 'todas' == this.form.get('acao')?.value }"
+                    (click)="selecionarAcao('todas')">Todas</a>
+            </div>
+        </section>
+        <div class="row ">
+            <div class="col det-25 ">
+                <mat-form-field>
+                    <mat-label>Data Específica</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="date">
+                    <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col det-25 ">
+                <button type="submit" class="btn-atualizar"> atualizar </button>
+            </div>
+        </div>
+
+    </form>
+    <section>
+        <div class="row titulo">
+            <div class="col det-20 ">ACAO</div>
+            <div class="col det-20 ">data </div>
+            <div class="col det-20 ">Preço</div>
+            <div class="col det-20 ">Operacao</div>
+            <div class="col det-5"> QTD </div>
+        </div>
+
+        <div *ngIf="acoes.length > 0; else semProcessos">
+            @for (acao of acoes; track acao) {
+            <div class="row elemento">
+                <div class="col det-20 ">{{acao.instrument}}</div>
+                <div class="col det-20 ">{{acao.data | date:'dd/MM/yyyy' }}</div>
+                <div class="col det-20 ">{{acao.preco}}</div>
+                <div class="col det-20 ">{{acao.tipoOperacao}}</div>
+                <div class="col det-5"> {{ acao.quantidade }} </div>
+            </div>
+            }
+            <app-pagination [pager]="pager" (paginationEmmiter)="setPageofClientes($event)">
+            </app-pagination>
+        </div>
+        <ng-template #semProcessos>
+            <div class="row elemento">
+                Não Há Registros
+            </div>
+        </ng-template>
+    </section>
+</section>

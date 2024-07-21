@@ -1,14 +1,9 @@
-.col-det {
-    width: 10;
-    font-weight: bold;
-    padding: 4px;
-}
-
-.titulo {
-    background: var(--main-color);
-    color: white;
-}
-
-.elemento:nth-child(odd) {
-    background: rgb(223, 223, 223);
+.btn-opcao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 112px;
+    width: 112px;   
+    border: 2px solid var(--main-color);
+    border-radius: 4px;
 }

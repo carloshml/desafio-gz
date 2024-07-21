@@ -34,8 +34,8 @@ export class HomeComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.procurando = true;
     try {
-      this.acoes = await this.userTradeService.listarPorDia('VVAR3F', '2020-04-16', 1, 5);
-      console.log('acoes :::: ', this.acoes);
+      this.totalElementos = await this.userTradeService.listarPorInstrumenteeDataTotal('VVAR3F', '2020-04-16', 1, 5);
+      console.log('totalElementos :::: ', this.totalElementos);
       this.setPageofClientes(1);
     } catch (error) {
 
@@ -51,7 +51,8 @@ export class HomeComponent implements OnInit {
     }
     this.pager = this.paginacaoServico.getPager(this.totalElementos, page, this.valorMaximoLinhasGrid);
     try {
-      this.acoes = await this.userTradeService.listarPaginado((this.pager.currentPage - 1), this.valorMaximoLinhasGrid);
+      this.acoes = await this.userTradeService.listarPorInstrumenteeData('VVAR3F', '2020-04-16',(this.pager.currentPage - 1), this.valorMaximoLinhasGrid);
+      console.log('acoes :::: ', this.acoes);
     } catch (error) {
       console.error('error ::: ', error);
     }
