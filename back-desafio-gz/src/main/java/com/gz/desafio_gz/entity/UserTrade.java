@@ -27,13 +27,19 @@ public class UserTrade implements Serializable {
     private String tipoOperacao;
     private String mercado;
     private String prazo;
-    private String instrument; 
+    private String instrument;
     private String especificacao;
     private int quantidade;
     private BigDecimal preco;
     private BigDecimal valorTotal;
 
     public UserTrade() {
+    }
+
+    public UserTrade(String instrument, BigDecimal valorTotal, int quantidade) {
+        this.instrument = instrument;
+        this.valorTotal = valorTotal;
+        this.quantidade = quantidade;
     }
 
     public Long getId() {
@@ -74,8 +80,8 @@ public class UserTrade implements Serializable {
 
     public BigDecimal getValorTotal() {
         return valorTotal;
-    } 
-  
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

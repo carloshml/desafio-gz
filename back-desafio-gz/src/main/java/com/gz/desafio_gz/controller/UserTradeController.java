@@ -69,4 +69,13 @@ public class UserTradeController {
         return ResponseEntity.ok(userTradeResp);
     }
 
+
+    @GetMapping(value = "/somatorioIntrumentDate/{acao}/{dia}")
+    public ResponseEntity<List<UserTrade>> somatorioIntrumentDate(
+            @PathVariable(value = "acao") String acao,
+            @PathVariable(value = "dia") String dia) {
+        var userTradeResp = userTradeService.somatorioIntrumentDate(acao, dia);
+        return ResponseEntity.ok(userTradeResp);
+    }
+
 }

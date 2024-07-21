@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gz.desafio_gz.entity.InstrumentQuote;
 import com.gz.desafio_gz.service.InstrumentQuoteService;
-import com.gz.desafio_gz.service.UserTradeService;
 
 @RestController
 @RequestMapping("/instrumentQuote")

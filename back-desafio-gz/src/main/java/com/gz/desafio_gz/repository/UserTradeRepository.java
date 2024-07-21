@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
- 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,5 +26,14 @@ public interface UserTradeRepository extends JpaRepository<UserTrade, Long> {
 
     @Query("select distinct(instrument) from UserTrade group by  instrument ")
     Optional<List<String>> listarAcoesNegociadas();
+
+    @Query("SELECT "
+            + "     instrument, "
+            + "     SUM(CASE WHEN tipoOperacao = 'C' THEN valorTotal ELSE 0 END) -     SUM(CASE WHEN tipoOperacao = 'V' THEN valorTotal ELSE 0 END) AS valorTotal,"
+            + "     SUM(CASE WHEN tipoOperacao = 'C' THEN quantidade ELSE 0 END)  -     SUM(CASE WHEN tipoOperacao = 'V' THEN quantidade ELSE 0 END) AS quantidade"
+            + " FROM  UserTrade a "
+            + "   where   a.instrument  like :instrument     and a.data  <=  :date "
+            + "   GROUP BY    a.instrument  order by a.instrument ")
+    List<Object[]> somatorioIntrumentDate(String instrument, LocalDate date);
 
 }

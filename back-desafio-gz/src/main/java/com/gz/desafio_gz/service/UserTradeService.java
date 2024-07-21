@@ -1,5 +1,7 @@
 package com.gz.desafio_gz.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -65,5 +67,22 @@ public class UserTradeService {
 
     public List<String> listarAcoesNegociadas() {
         return userTradeRepositoryRepository.listarAcoesNegociadas().get();
+    }
+
+    public List<UserTrade> somatorioIntrumentDate(String instrument, String date) {
+        if (instrument.equals("todas")) {
+            instrument = "%";
+        }
+        List<Object[]> response = userTradeRepositoryRepository.somatorioIntrumentDate(instrument,
+                util.stringToLocalDate(date));
+        List<UserTrade> retorno = new ArrayList<>();
+        for (Object[] objects : response) {             
+            var transacao = new UserTrade();
+            transacao.setInstrument("" + objects[0]);
+            transacao.setValorTotal(new BigDecimal("" + objects[1]));
+            transacao.setQuantidade(Integer.valueOf("" + objects[2]));
+            retorno.add(transacao);
+        }
+        return retorno;
     }
 }

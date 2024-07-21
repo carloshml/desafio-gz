@@ -40,6 +40,9 @@ public class InstrumentQuoteService {
     }
 
     public List<InstrumentQuote> listarPorInstrumenteeData(String simbol, String data) {
+        if (simbol.equals("todas")) {
+            simbol = "%";
+        }
         return instrumentQuoteRepository.listarPorInstrumenteeDataTotal(simbol, util.stringToLocalDate(data));
     }
 
