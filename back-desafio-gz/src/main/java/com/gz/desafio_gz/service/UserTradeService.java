@@ -10,12 +10,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.gz.desafio_gz.Util;
 import com.gz.desafio_gz.entity.UserTrade;
 import com.gz.desafio_gz.repository.UserTradeRepository;
 
 @Service
 public class UserTradeService {
 
+    private Util util = new Util();
     UserTradeRepository userTradeRepositoryRepository;
 
     public UserTradeService(UserTradeRepository iqr) {
@@ -47,11 +49,13 @@ public class UserTradeService {
 
     public List<UserTrade> listarPorInstrumenteeData(String instrument, String date, int page, int pageSize) {
         PageRequest pageRequest = PageRequest.of(page, pageSize);
-        List<Integer> detData = Arrays.asList(date.split("-")).stream().map(a -> Integer.parseInt(a)).toList();
-        LocalDate dataPesquisa = LocalDate.of(detData.get(0), Month.of(detData.get(1)), detData.get(2));
         Page<UserTrade> userTradesPage = userTradeRepositoryRepository.listarPorInstrumenteeData(instrument,
-                dataPesquisa,
+                util.stringToLocalDate(date),
                 pageRequest);
         return userTradesPage.getContent();
+    }
+
+    public Long listarPorInstrumenteeDataTotal(String instrument, String date) {
+        return userTradeRepositoryRepository.listarPorInstrumenteeDataTotal(instrument, util.stringToLocalDate(date));
     }
 }
