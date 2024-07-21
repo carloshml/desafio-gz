@@ -1,1 +1,40 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --main-color: gray;
+    --light-main-color: lightgray;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+
+a {
+    text-decoration: none;
+}
+
+a.btn :visited {
+    color: white;
+}
+
+
+.painel {
+    margin: 0 10%;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col {
+    width: 30%;
+    font-weight: bold;
+    padding: 4px;
+}

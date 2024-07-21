@@ -35,6 +35,23 @@ public class UserTradeController {
         return ResponseEntity.ok(processos);
     }
 
+    @GetMapping(value = "/listarPorDia/{acao}/{dia}/{inicio}/{qtd}")
+    public ResponseEntity<List<UserTrade>> listarPorDia(
+        @PathVariable(value = "acao") String acao,
+        @PathVariable(value = "dia") String dia,
+            @PathVariable(value = "inicio") int inicio,
+            @PathVariable(value = "qtd") int qtd) {
+
+        PageRequest pageRequest = PageRequest.of(
+                inicio,
+                qtd,
+                Sort.Direction.DESC,
+                "data");
+
+        var processos = UserTradeService.findAllPaginado(pageRequest);
+        return ResponseEntity.ok(processos);
+    }
+
     @GetMapping(value = "/listarPaginado/{inicio}/{qtd}")
     public ResponseEntity<List<UserTrade>> listarProcessosPaginado(@PathVariable(value = "inicio") int inicio,
             @PathVariable(value = "qtd") int qtd) {

@@ -1,0 +1,14 @@
+.col-det {
+    width: 10;
+    font-weight: bold;
+    padding: 4px;
+}
+
+.titulo {
+    background: var(--main-color);
+    color: white;
+}
+
+.elemento:nth-child(odd) {
+    background: rgb(223, 223, 223);
+}

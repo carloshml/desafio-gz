@@ -1,0 +1,38 @@
+<section class="painel">
+    <div class="row ">
+        <h2 class="col">Acoes</h2>
+        <div class="col"></div>
+    </div>
+    <section>
+        <div class="row titulo">
+            <div class="col">ACAO</div>
+            <div class="col">data </div>
+            <div class="col">Preço</div>
+            <div class="col-det">
+                ver
+            </div>
+        </div>
+        <mat-progress-bar *ngIf="procurando" mode="indeterminate"></mat-progress-bar>
+        <div *ngIf="acoes.length > 0; else semProcessos">
+            @for (acao of acoes; track acao) {
+            <div class="row elemento">
+                <div class="col">{{acao.instrument}}</div>
+                <div class="col">{{acao.data | date:'dd/MM/yy HH:mm' }}</div>
+                <div class="col">{{acao.preco}}</div>
+                <div class="col-det">
+                    <a class="btn-1" [routerLink]="['/ler-processo', acao.id]">
+                        <mat-icon>find_in_page</mat-icon>
+                    </a>
+                </div>
+            </div>
+            }
+            <app-pagination [pager]="pager" (paginationEmmiter)="setPageofClientes($event)">
+            </app-pagination>
+        </div>
+        <ng-template #semProcessos>
+            <div class="row elemento">
+                Não Há Registros
+            </div>
+        </ng-template>
+    </section>
+</section>
