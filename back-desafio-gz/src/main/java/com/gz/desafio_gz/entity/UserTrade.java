@@ -27,7 +27,7 @@ public class UserTrade implements Serializable {
     private String tipoOperacao;
     private String mercado;
     private String prazo;
-    private String instrument;
+    private String instrument; 
     private String especificacao;
     private int quantidade;
     private BigDecimal preco;

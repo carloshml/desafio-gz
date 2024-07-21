@@ -2,8 +2,6 @@ package com.gz.desafio_gz.controller;
 
 import java.util.List;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,34 +33,20 @@ public class UserTradeController {
         return ResponseEntity.ok(processos);
     }
 
-    @GetMapping(value = "/listarPorDia/{acao}/{dia}/{inicio}/{qtd}")
-    public ResponseEntity<List<UserTrade>> listarPorDia(
-        @PathVariable(value = "acao") String acao,
-        @PathVariable(value = "dia") String dia,
-            @PathVariable(value = "inicio") int inicio,
+    @GetMapping(value = "/listarPorInstrumenteeData/{acao}/{dia}/{page}/{qtd}")
+    public ResponseEntity<List<UserTrade>> listarPorInstrumenteeData(
+            @PathVariable(value = "acao") String acao,
+            @PathVariable(value = "dia") String dia,
+            @PathVariable(value = "page") int page,
             @PathVariable(value = "qtd") int qtd) {
-
-        PageRequest pageRequest = PageRequest.of(
-                inicio,
-                qtd,
-                Sort.Direction.DESC,
-                "data");
-
-        var processos = UserTradeService.findAllPaginado(pageRequest);
+        var processos = UserTradeService.listarPorInstrumenteeData(acao, dia, page, qtd);
         return ResponseEntity.ok(processos);
     }
 
-    @GetMapping(value = "/listarPaginado/{inicio}/{qtd}")
-    public ResponseEntity<List<UserTrade>> listarProcessosPaginado(@PathVariable(value = "inicio") int inicio,
+    @GetMapping(value = "/listarPaginado/{page}/{qtd}")
+    public ResponseEntity<List<UserTrade>> listarPaginado(@PathVariable(value = "page") int page,
             @PathVariable(value = "qtd") int qtd) {
-
-        PageRequest pageRequest = PageRequest.of(
-                inicio,
-                qtd,
-                Sort.Direction.DESC,
-                "data");
-
-        var processos = UserTradeService.findAllPaginado(pageRequest);
+        var processos = UserTradeService.findAllPaginado(page, qtd);
         return ResponseEntity.ok(processos);
     }
 
