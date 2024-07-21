@@ -29,8 +29,8 @@ public class UserTradeController {
 
     @GetMapping
     public ResponseEntity<List<UserTrade>> getAll() {
-        var processos = UserTradeService.getAll();
-        return ResponseEntity.ok(processos);
+        var userTradeResp = UserTradeService.getAll();
+        return ResponseEntity.ok(userTradeResp);
     }
 
     @GetMapping(value = "/listarPorInstrumenteeData/{acao}/{dia}/{page}/{qtd}")
@@ -39,15 +39,15 @@ public class UserTradeController {
             @PathVariable(value = "dia") String dia,
             @PathVariable(value = "page") int page,
             @PathVariable(value = "qtd") int qtd) {
-        var processos = UserTradeService.listarPorInstrumenteeData(acao, dia, page, qtd);
-        return ResponseEntity.ok(processos);
+        var userTradeResp = UserTradeService.listarPorInstrumenteeData(acao, dia, page, qtd);
+        return ResponseEntity.ok(userTradeResp);
     }
 
     @GetMapping(value = "/listarPaginado/{page}/{qtd}")
     public ResponseEntity<List<UserTrade>> listarPaginado(@PathVariable(value = "page") int page,
             @PathVariable(value = "qtd") int qtd) {
-        var processos = UserTradeService.findAllPaginado(page, qtd);
-        return ResponseEntity.ok(processos);
+        var userTradeResp = UserTradeService.findAllPaginado(page, qtd);
+        return ResponseEntity.ok(userTradeResp);
     }
 
     @GetMapping(value = "/listarQtdTotal")
@@ -59,8 +59,14 @@ public class UserTradeController {
     public ResponseEntity<Long> listarPorInstrumenteeDataTotal(
             @PathVariable(value = "acao") String acao,
             @PathVariable(value = "dia") String dia) {
-        var processos = UserTradeService.listarPorInstrumenteeDataTotal(acao, dia);
-        return ResponseEntity.ok(processos);
+        var userTradeResp = UserTradeService.listarPorInstrumenteeDataTotal(acao, dia);
+        return ResponseEntity.ok(userTradeResp);
+    }
+
+    @GetMapping(value = "/listarAcoesNegociadas/")
+    public ResponseEntity<Long> listarAcoesNegociadas() {
+        var userTradeResp = UserTradeService.listarAcoesNegociadas();
+        return ResponseEntity.ok(userTradeResp);
     }
 
 }
