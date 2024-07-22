@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.gz.desafio_gz.Util;
+import com.gz.desafio_gz.dto.SomatorioResponse;
 import com.gz.desafio_gz.entity.UserTrade;
 import com.gz.desafio_gz.repository.UserTradeRepository;
 
@@ -69,20 +70,22 @@ public class UserTradeService {
         return userTradeRepositoryRepository.listarAcoesNegociadas().get();
     }
 
-    public List<UserTrade> somatorioIntrumentDate(String instrument, String date) {
+    public List<SomatorioResponse> somatorioIntrumentDate(String instrument, String date) {
         if (instrument.equals("todas")) {
             instrument = "%";
         }
-        List<Object[]> response = userTradeRepositoryRepository.somatorioIntrumentDate(instrument,
+        var reponse = userTradeRepositoryRepository.somatorioIntrumentDate(instrument,
                 util.stringToLocalDate(date));
-        List<UserTrade> retorno = new ArrayList<>();
-        for (Object[] objects : response) {             
-            var transacao = new UserTrade();
-            transacao.setInstrument("" + objects[0]);
-            transacao.setValorTotal(new BigDecimal("" + objects[1]));
-            transacao.setQuantidade(Integer.valueOf("" + objects[2]));
-            retorno.add(transacao);
+        List<SomatorioResponse> somatorios = new ArrayList<>();
+        for (Object[] obj : reponse) {
+            var somatorio = new SomatorioResponse();
+            somatorio.setInstrument("" + obj[0]);
+            somatorio.setValorTotalCompra(new BigDecimal("" + obj[1]));
+            somatorio.setValorTotalVenda(new BigDecimal("" + obj[2]));
+            somatorio.setQuantidade(Long.valueOf("" + obj[3]));
+            somatorios.add(somatorio);
         }
-        return retorno;
+        return somatorios;
+
     }
 }

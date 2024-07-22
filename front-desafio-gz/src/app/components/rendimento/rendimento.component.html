@@ -22,6 +22,8 @@
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
             </div>
+            <div class="col det-25 "></div>
+            <div class="col det-25 "></div>
             <div class="col det-25 ">
                 <button type="submit" class="btn-atualizar"> atualizar </button>
             </div>
@@ -29,28 +31,59 @@
 
     </form>
     <section>
+        <h2 *ngIf="this.form">Negociações em {{this.form.get('date')?.value | date:'dd/MM/yyyy' }} </h2>
         <div class="row titulo">
-            <div class="col det-20 ">ACAO</div>
-            <div class="col det-20 ">data </div>
-            <div class="col det-20 ">Preço</div>
-            <div class="col det-20 ">Operacao</div>
+            <div class="col det-17 ">ACAO</div>
+            <div class="col det-17 ">data </div>
+            <div class="col det-17 ">Preço</div>
+            <div class="col det-17 ">Operacao</div>
             <div class="col det-5"> QTD </div>
+            <div class="col det-5"> Total </div>
         </div>
 
-        <div *ngIf="acoes.length > 0; else semProcessos">
+        <div *ngIf="acoes.length > 0; else semAcoes">
             @for (acao of acoes; track acao) {
             <div class="row elemento">
-                <div class="col det-20 ">{{acao.instrument}}</div>
-                <div class="col det-20 ">{{acao.data | date:'dd/MM/yyyy' }}</div>
-                <div class="col det-20 ">{{acao.preco}}</div>
-                <div class="col det-20 ">{{acao.tipoOperacao}}</div>
+                <div class="col det-17 ">{{acao.instrument}}</div>
+                <div class="col det-17 ">{{acao.data | date:'dd/MM/yyyy' }}</div>
+                <div class="col det-17 valores ">{{acao.preco | currency:'BRL' }}</div>
+                <div class="col det-17 ">{{acao.tipoOperacao}}</div>
                 <div class="col det-5"> {{ acao.quantidade }} </div>
+                <div class="col det-17 valores"> {{ acao.valorTotal | currency:'BRL' }} </div>
             </div>
             }
-            <app-pagination [pager]="pager" (paginationEmmiter)="setPageofClientes($event)">
-            </app-pagination>
         </div>
-        <ng-template #semProcessos>
+        <app-pagination [pager]="pager" (paginationEmmiter)="setPage($event)">
+        </app-pagination>
+        <h2>Totais Ações </h2>
+        <div class="row titulo">
+            <div class="col det-17 ">ACAO</div>
+            <div class="col det-17 "> </div>
+            <div class="col det-17 ">Preço</div>
+            <div class="col det-17 ">Operacao</div>
+            <div class="col det-5"> QTD </div>
+            <div class="col det-17 "> Total </div>
+        </div>
+        @for (acao of totais; track acao) {
+        <div class="row elemento">
+            <div class="col det-17 ">{{acao.instrument}}</div>
+            <div class="col det-17 "> </div>
+            <div class="col det-17 valores "> </div>
+            <div class="col det-17 ">{{acao.tipoOperacao}}</div>
+            <div class="col det-5"> {{ acao.quantidade }} </div>
+            <div *ngIf="acao.tipo  != 'P'"
+                [ngClass]="{'verde': acao.valorTotal  >0 && acao.tipo  == 'R' ,  'vermelho': acao.valorTotal  < 0 && acao.tipo  == 'R'  }"
+                class="col det-17 valores"> {{ acao.valorTotal | currency:'BRL' }} </div>
+            <div *ngIf="acao.tipo === 'P'"
+                [ngClass]="{'verde': acao.valorTotal  >0 && acao.tipo  == 'P' ,  'vermelho': acao.valorTotal  < 0  && acao.tipo  == 'P' }"
+                class="col det-17 valores"> {{acao.valorPercent}} </div>
+
+        </div>
+        }
+
+
+
+        <ng-template #semAcoes>
             <div class="row elemento">
                 Não Há Registros
             </div>

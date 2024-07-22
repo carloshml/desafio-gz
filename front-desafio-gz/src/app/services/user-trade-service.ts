@@ -72,11 +72,21 @@ export class UserTradeService {
   * @param page  min = 0
   * @param quantidade
  */
-    listarPorInstrumenteeDataTotal(acao: string, data: string, page: number, quantidade: number) {
+    listarPorInstrumenteeDataTotal(acao: string, data: string) {
         return lastValueFrom(
 
             this.http
                 .get<any>(`${this.API}/listarPorInstrumenteeDataTotal/${acao}/${data} `)
+                .pipe(
+                    catchError(e => throwError(() => this.handleErrorRequisicao(e)))
+                )
+        );
+    }
+
+    somatorioIntrumentDate(acao: any, data: any): any {
+        return lastValueFrom(
+            this.http
+                .get<any>(`${this.API}/somatorioIntrumentDate/${acao}/${data} `)
                 .pipe(
                     catchError(e => throwError(() => this.handleErrorRequisicao(e)))
                 )
@@ -93,7 +103,7 @@ export class UserTradeService {
                     catchError(e => throwError(() => this.handleErrorRequisicao(e)))
                 )
         );
-    } 
+    }
 
 }
 

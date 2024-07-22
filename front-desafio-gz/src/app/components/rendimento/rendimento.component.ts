@@ -13,6 +13,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InstrumentQuoteService } from '../../services/instrument-quote';
+import { UserTradeTotal } from '../../entity/user-trade-total';
+import { InstrumentQuote } from '../../entity/instrument-quote';
 
 
 enum TipoOperacao {
@@ -20,11 +23,16 @@ enum TipoOperacao {
   venda = 'V',
 }
 
+class DadoTabela {
+  transacoes: UserTrade[] = [];
+  transacoesTotais: any[] = [];
+};
+
 @Component({
   selector: 'app-rendimento',
   standalone: true,
   imports: [MatIconModule, CommonModule, PaginationComponent, ReactiveFormsModule, RouterModule, MatProgressBarModule, MatFormFieldModule, MatInputModule, MatDatepickerModule],
-  providers: [UserTradeService, provideNativeDateAdapter()],
+  providers: [UserTradeService, InstrumentQuoteService, provideNativeDateAdapter()],
   templateUrl: './rendimento.component.html',
   styleUrl: './rendimento.component.scss'
 })
@@ -34,16 +42,26 @@ export class RendimentoComponent implements OnInit {
   acoes: UserTrade[] = [];
   listaAcoes: string[] = [];
   form: FormGroup;
+  acaoNoDia: InstrumentQuote[] = [];
+  dadosTabela: DadoTabela[] = [];
+  mapaDados?: Map<any, any>;
+  somatorios: UserTradeTotal[] = [];
+  totais: UserTradeTotal[] = [];
+
+
 
   // atributos para a paginacao
   pager: Pager = new Pager();
   paginacaoServico = new PaginacaoService();
   totalElementos = 0;
-  valorMaximoLinhasGrid = 5;
+  valorMaximoLinhasGrid = 100;
 
-  constructor(private userTradeService: UserTradeService, formBuilder: FormBuilder, private _snackBar: MatSnackBar,) {
+
+  constructor(private userTradeService: UserTradeService,
+    private instrumentQuoteService: InstrumentQuoteService,
+    formBuilder: FormBuilder, private _snackBar: MatSnackBar,) {
     this.form = formBuilder.group({
-      date: new FormControl(Validators.required),
+      date: new FormControl(new Date(), Validators.required),
       acao: new FormControl(Validators.required),
     });
   }
@@ -76,27 +94,70 @@ export class RendimentoComponent implements OnInit {
   }
 
   async atualizar() {
-
     const validacao = this.validateForm(this.form);
     if (validacao) {
       this._snackBar.open(validacao);
       return;
     }
-
     try {
-      this.totalElementos = await this.userTradeService.listarPorInstrumenteeDataTotal('VVAR3F', '2020-04-16', 1, 5);
+      this.acaoNoDia = await this.instrumentQuoteService.listarPorInstrumenteeData(
+        this.form.get('acao')?.value,
+        this.form.get('date')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-'),
+      );
+      this.somatorios = await this.userTradeService.somatorioIntrumentDate(
+        this.form.get('acao')?.value,
+        this.form.get('date')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-'),
+      );
+
+
+      console.log('acaoNoDia :::: ', this.acaoNoDia);
+      console.log('this.somatorios :::: ', this.somatorios);
+
+      this.mapaDados = new Map();
+      for (const dado of this.acaoNoDia) {
+        this.mapaDados.set(dado.simbol, dado);
+      }
+      this.totais = [];
+      this.somatorios
+        .forEach(som => {
+          const instrument = som.instrument;
+          som.tipoOperacao = 'Valor De Compra';
+          som.valorTotal = som.valorTotalCompra;        
+          this.totais.push(JSON.parse(JSON.stringify(som)));
+          som.instrument = '';
+          som.valorTotal = som.quantidade * this.mapaDados?.get(instrument)?.price;
+          som.tipoOperacao = 'Valor De Venda Hoje';         
+          this.totais.push(JSON.parse(JSON.stringify(som)));
+          som.valorTotal = (som.quantidade > 0) ? (som.valorTotal - som.valorTotalCompra) : 0;
+          som.tipoOperacao = 'Rendimento R$'; 
+          som.tipo = 'R';         
+          this.totais.push(JSON.parse(JSON.stringify(som)));
+          const percent = JSON.parse(JSON.stringify(som));
+          percent.valorTotal = som.valorTotal / (som.valorTotalCompra / 100);
+          percent.tipoOperacao = 'Rendimento %';
+          percent.valorPercent = '' + percent.valorTotal.toFixed(2)+ '';
+          percent.tipo = 'P';
+          this.totais.push(JSON.parse(JSON.stringify(percent)));
+        });
+
+
+      this.totalElementos = await this.userTradeService.listarPorInstrumenteeDataTotal(
+        this.form.get('acao')?.value,
+        this.form.get('date')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-'),
+      );
+      this.setPage(1);
       console.log('totalElementos :::: ', this.totalElementos);
-      this.setPageofClientes(1);
     } catch (error) {
-      console.log('error :::: ', error);
+      console.error('error :::: ', error);
     }
   }
 
-  async setPageofClientes(page: any) {
-    this.procurando = true;
+  async setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) {
       return;
     }
+    console.log('errorsetPage:::: ', page);
+    this.procurando = true;
     this.pager = this.paginacaoServico.getPager(this.totalElementos, page, this.valorMaximoLinhasGrid);
     try {
       this.acoes = await this.userTradeService.listarPorInstrumenteeData(

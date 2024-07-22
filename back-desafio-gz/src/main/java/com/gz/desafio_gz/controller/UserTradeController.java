@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gz.desafio_gz.dto.SomatorioResponse;
 import com.gz.desafio_gz.entity.UserTrade;
 import com.gz.desafio_gz.service.UserTradeService;
 
@@ -69,9 +70,8 @@ public class UserTradeController {
         return ResponseEntity.ok(userTradeResp);
     }
 
-
     @GetMapping(value = "/somatorioIntrumentDate/{acao}/{dia}")
-    public ResponseEntity<List<UserTrade>> somatorioIntrumentDate(
+    public ResponseEntity<List<SomatorioResponse>> somatorioIntrumentDate(
             @PathVariable(value = "acao") String acao,
             @PathVariable(value = "dia") String dia) {
         var userTradeResp = userTradeService.somatorioIntrumentDate(acao, dia);

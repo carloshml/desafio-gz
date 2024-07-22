@@ -29,7 +29,8 @@ public interface UserTradeRepository extends JpaRepository<UserTrade, Long> {
 
     @Query("SELECT "
             + "     instrument, "
-            + "     SUM(CASE WHEN tipoOperacao = 'C' THEN valorTotal ELSE 0 END) -     SUM(CASE WHEN tipoOperacao = 'V' THEN valorTotal ELSE 0 END) AS valorTotal,"
+            + "     SUM(CASE WHEN tipoOperacao = 'C' THEN valorTotal ELSE 0 END) AS valorTotalCompra,"
+            + "     SUM(CASE WHEN tipoOperacao = 'V' THEN valorTotal ELSE 0 END) AS valorTotalVenda,"
             + "     SUM(CASE WHEN tipoOperacao = 'C' THEN quantidade ELSE 0 END)  -     SUM(CASE WHEN tipoOperacao = 'V' THEN quantidade ELSE 0 END) AS quantidade"
             + " FROM  UserTrade a "
             + "   where   a.instrument  like :instrument     and a.data  <=  :date "

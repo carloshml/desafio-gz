@@ -5,10 +5,11 @@ import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withFetch, withJsonpSupport } from '@angular/common/http';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+ 
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes),
-  { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+  { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }, 
   provideAnimationsAsync(),
   provideHttpClient(withFetch(), withJsonpSupport())]
 
