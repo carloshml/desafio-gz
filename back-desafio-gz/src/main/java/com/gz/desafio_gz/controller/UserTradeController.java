@@ -78,4 +78,25 @@ public class UserTradeController {
         return ResponseEntity.ok(userTradeResp);
     }
 
+    @GetMapping(value = "/somatorioIntrumentDateInicialDataFinal/{acao}/{dataInicial}/{dataFinal}")
+    public ResponseEntity<List<SomatorioResponse>> somatorioIntrumentDateInicialDataFinal(
+            @PathVariable(value = "acao") String acao,
+            @PathVariable(value = "dataInicial") String dataInicial,
+            @PathVariable(value = "dataFinal") String dataFinal) {
+        var userTradeResp = userTradeService.somatorioIntrumentDateInicialDataFinal(acao, dataInicial, dataFinal);
+        return ResponseEntity.ok(userTradeResp);
+    }
+
+    @GetMapping(value = "/listarPorInstrumenteDateInicialDataFinal/{acao}/{dataInicial}/{dataFinal}/{page}/{qtd}")
+    public ResponseEntity<List<UserTrade>> listarPorInstrumenteDateInicialDataFinal(
+            @PathVariable(value = "acao") String acao,
+            @PathVariable(value = "dataInicial") String dataInicial,
+            @PathVariable(value = "dataFinal") String dataFinal,
+            @PathVariable(value = "page") int page,
+            @PathVariable(value = "qtd") int qtd) {
+        var userTradeResp = userTradeService.listarPorInstrumenteDateInicialDataFinal(acao, dataInicial, dataFinal,
+                page, qtd);
+        return ResponseEntity.ok(userTradeResp);
+    }
+
 }

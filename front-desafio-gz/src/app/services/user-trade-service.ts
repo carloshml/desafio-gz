@@ -105,5 +105,38 @@ export class UserTradeService {
         );
     }
 
+
+    /**
+    * @param acao 
+    * @param dataInicial  yyyy-mm-dd
+    * @param dataFinal  yyyy-mm-dd 
+    * @param page  min = 0
+    * @param quantidade
+    */
+    somatorioIntrumentDateInicialDataFinal(acao: string, dataInicial: string, dataFinal: string): any {
+        return lastValueFrom(
+            this.http
+                .get<any>(`${this.API}/somatorioIntrumentDateInicialDataFinal/${acao}/${dataInicial}/${dataFinal}`)
+                .pipe(
+                    catchError(e => throwError(() => this.handleErrorRequisicao(e)))
+                )
+        );
+    }
+
+    /**
+   * @param acao 
+   * @param dataInicial  yyyy-mm-dd
+   *  @param dataFinal  yyyy-mm-dd 
+   */
+    listarPorInstrumenteDateInicialDataFinal(acao: string, dataInicial: string, dataFinal: string, page: number, quantidade: number): any {
+        return lastValueFrom(
+            this.http
+                .get<any>(`${this.API}/listarPorInstrumenteDateInicialDataFinal/${acao}/${dataInicial}/${dataFinal}/${page}/${quantidade}`)
+                .pipe(
+                    catchError(e => throwError(() => this.handleErrorRequisicao(e)))
+                )
+        );
+    }
+
 }
 

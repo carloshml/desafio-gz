@@ -15,26 +15,42 @@ import com.gz.desafio_gz.entity.UserTrade;
 @Repository
 public interface UserTradeRepository extends JpaRepository<UserTrade, Long> {
 
-    @Query("select count(*) from UserTrade")
-    Long listarQtdTotal();
+        @Query("select count(*) from UserTrade")
+        Long listarQtdTotal();
 
-    @Query("select a from UserTrade a where a.instrument like :instrument  and   a.data =  :date order by instrument  ")
-    Page<UserTrade> listarPorInstrumenteeData(String instrument, LocalDate date, PageRequest pageRequest);
+        @Query("select a from UserTrade a where a.instrument like :instrument  and   a.data =  :date order by instrument  ")
+        Page<UserTrade> listarPorInstrumenteeData(String instrument, LocalDate date, PageRequest pageRequest);
 
-    @Query("select count(*)  from UserTrade a where a.instrument like :instrument  and   a.data =  :date ")
-    Long listarPorInstrumenteeDataTotal(String instrument, LocalDate date);
+        @Query("select count(*)  from UserTrade a where a.instrument like :instrument  and   a.data =  :date ")
+        Long listarPorInstrumenteeDataTotal(String instrument, LocalDate date);
 
-    @Query("select distinct(instrument) from UserTrade group by  instrument ")
-    Optional<List<String>> listarAcoesNegociadas();
+        @Query("select distinct(instrument) from UserTrade group by  instrument ")
+        Optional<List<String>> listarAcoesNegociadas();
 
-    @Query("SELECT "
-            + "     instrument, "
-            + "     SUM(CASE WHEN tipoOperacao = 'C' THEN valorTotal ELSE 0 END) AS valorTotalCompra,"
-            + "     SUM(CASE WHEN tipoOperacao = 'V' THEN valorTotal ELSE 0 END) AS valorTotalVenda,"
-            + "     SUM(CASE WHEN tipoOperacao = 'C' THEN quantidade ELSE 0 END)  -     SUM(CASE WHEN tipoOperacao = 'V' THEN quantidade ELSE 0 END) AS quantidade"
-            + " FROM  UserTrade a "
-            + "   where   a.instrument  like :instrument     and a.data  <=  :date "
-            + "   GROUP BY    a.instrument  order by a.instrument ")
-    List<Object[]> somatorioIntrumentDate(String instrument, LocalDate date);
+        @Query("SELECT "
+                        + "     instrument, "
+                        + "     SUM(CASE WHEN tipoOperacao = 'C' THEN valorTotal ELSE 0 END) AS valorTotalCompra,"
+                        + "     SUM(CASE WHEN tipoOperacao = 'V' THEN valorTotal ELSE 0 END) AS valorTotalVenda,"
+                        + "     SUM(CASE WHEN tipoOperacao = 'C' THEN quantidade ELSE 0 END) AS quantidadeCompra, "
+                        + "     SUM(CASE WHEN tipoOperacao = 'V' THEN quantidade ELSE 0 END) AS quantidadeVenda"
+                        + " FROM  UserTrade a "
+                        + "   where   a.instrument  like :instrument     and a.data  <=  :date "
+                        + "   GROUP BY    a.instrument  order by a.instrument ")
+        List<Object[]> somatorioIntrumentDate(String instrument, LocalDate date);
+
+        @Query("SELECT "
+                        + "     instrument, "
+                        + "     SUM(CASE WHEN tipoOperacao = 'C' THEN valorTotal ELSE 0 END) AS valorTotalCompra,"
+                        + "     SUM(CASE WHEN tipoOperacao = 'V' THEN valorTotal ELSE 0 END) AS valorTotalVenda,"
+                        + "     SUM(CASE WHEN tipoOperacao = 'C' THEN quantidade ELSE 0 END) AS quantidadeCompra, "
+                        + "     SUM(CASE WHEN tipoOperacao = 'V' THEN quantidade ELSE 0 END) AS quantidadeVenda"
+                        + " FROM  UserTrade a "
+                        + "   where   a.instrument  like :instrument     and  a.data  >=  :dIni and   a.data  <=  :dFim "
+                        + "   GROUP BY    a.instrument  order by a.instrument ")
+        List<Object[]> somatorioIntrumentDateInicialDataFinal(String instrument, LocalDate dIni, LocalDate dFim);
+
+        @Query("select a from UserTrade a where a.instrument like :instrument  and  a.data  >=  :dIni and   a.data  <=  :dFim   order by instrument  ")
+        Page<UserTrade> listarPorInstrumenteeDateInicialDataFinal(String instrument, LocalDate dIni, LocalDate dFim,
+                        PageRequest pageRequest);
 
 }

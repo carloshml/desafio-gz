@@ -1,10 +1,13 @@
 export interface UserTradeTotal {
-  instrument: string,
-  quantidade: number,
-  tipoOperacao: string,
-  valorTotal: number,
-  valorTotalCompra: number,
-  valorTotalVenda: number,
-  valorPercent: string,
+  instrument: string;
+  quantidadeCompra: number;
+  quantidadeVenda: number;
+  valorTotalCompra: number;
+  valorTotalVenda: number;
+  // para tela
+  valorTotal: number;
+  tipoOperacao: string;
   tipo: string;
+  valorPercent: string;
+  quantidade?:number;
 }

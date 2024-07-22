@@ -82,10 +82,47 @@ public class UserTradeService {
             somatorio.setInstrument("" + obj[0]);
             somatorio.setValorTotalCompra(new BigDecimal("" + obj[1]));
             somatorio.setValorTotalVenda(new BigDecimal("" + obj[2]));
-            somatorio.setQuantidade(Long.valueOf("" + obj[3]));
+            somatorio.setQuantidadeCompra(Long.valueOf("" + obj[3]));
+            somatorio.setQuantidadeVenda(Long.valueOf("" + obj[4]));
             somatorios.add(somatorio);
         }
         return somatorios;
+    }
 
+    public List<SomatorioResponse> somatorioIntrumentDateInicialDataFinal(String instrument, String dataInicial,
+            String dataFinal) {
+        if (instrument.equals("todas")) {
+            instrument = "%";
+        }
+        var reponse = userTradeRepositoryRepository.somatorioIntrumentDateInicialDataFinal(instrument,
+                util.stringToLocalDate(dataInicial),
+                util.stringToLocalDate(dataFinal));
+        List<SomatorioResponse> somatorios = new ArrayList<>();
+        for (Object[] obj : reponse) {
+            var somatorio = new SomatorioResponse();
+            somatorio.setInstrument("" + obj[0]);
+            somatorio.setValorTotalCompra(new BigDecimal("" + obj[1]));
+            somatorio.setValorTotalVenda(new BigDecimal("" + obj[2]));
+            somatorio.setQuantidadeCompra(Long.valueOf("" + obj[3]));
+            somatorio.setQuantidadeVenda(Long.valueOf("" + obj[4]));
+            somatorios.add(somatorio);
+        }
+        return somatorios;
+    }
+
+    public List<UserTrade> listarPorInstrumenteDateInicialDataFinal(String instrument, String dataInicial,
+            String dataFinal,
+            int page,
+            int pageSize) {
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        if (instrument.equals("todas")) {
+            instrument = "%";
+        }
+        Page<UserTrade> userTradesPage = userTradeRepositoryRepository.listarPorInstrumenteeDateInicialDataFinal(
+                instrument,
+                util.stringToLocalDate(dataInicial),
+                util.stringToLocalDate(dataFinal),
+                pageRequest);
+        return userTradesPage.getContent();
     }
 }

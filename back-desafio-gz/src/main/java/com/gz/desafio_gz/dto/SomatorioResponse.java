@@ -6,9 +6,9 @@ public class SomatorioResponse {
     private String instrument;
     private BigDecimal valorTotalCompra;
     private BigDecimal valorTotalVenda;
-    private Long quantidade;
+    private Long quantidadeCompra;
+    private Long quantidadeVenda;
 
-   
     public String getInstrument() {
         return instrument;
     }
@@ -17,7 +17,6 @@ public class SomatorioResponse {
         this.instrument = instrument;
     }
 
-    
     public BigDecimal getValorTotalCompra() {
         return valorTotalCompra;
     }
@@ -26,7 +25,6 @@ public class SomatorioResponse {
         this.valorTotalCompra = valorTotalCompra;
     }
 
-   
     public BigDecimal getValorTotalVenda() {
         return valorTotalVenda;
     }
@@ -35,13 +33,20 @@ public class SomatorioResponse {
         this.valorTotalVenda = valorTotalVenda;
     }
 
- 
-    public Long getQuantidade() {
-        return quantidade;
+    public Long getQuantidadeVenda() {
+        return quantidadeVenda;
     }
 
-    public void setQuantidade(Long quantidade) {
-        this.quantidade = quantidade;
+    public void setQuantidadeVenda(Long quantidadeVenda) {
+        this.quantidadeVenda = quantidadeVenda;
+    }
+
+    public Long getQuantidadeCompra() {
+        return quantidadeCompra;
+    }
+
+    public void setQuantidadeCompra(Long quantidadeCompra) {
+        this.quantidadeCompra = quantidadeCompra;
     }
 
 }
