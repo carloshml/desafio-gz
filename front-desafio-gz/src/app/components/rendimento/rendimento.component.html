@@ -38,6 +38,18 @@
         </div>
     </form>
 
-    <app-red-detalhamento #appRendDetalhamento  [form]="this.form" [showdataInicial]="showdataInicial"  > </app-red-detalhamento>
-    
+    <mat-tab-group>
+        <mat-tab label="Detalhamento">
+            <app-red-detalhamento #appRendDetalhamento [form]="this.form" [totais]="totais" [showdataInicial]="showdataInicial">
+            </app-red-detalhamento>
+        </mat-tab>
+        <mat-tab label="Gráficos">
+            <app-red-graficos  #appRendChart [totais]="totais" ></app-red-graficos>
+        </mat-tab>
+
+    </mat-tab-group>
+
+
+
+
 </section>

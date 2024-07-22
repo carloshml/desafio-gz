@@ -1,5 +1,3 @@
-import { Injectable } from '@angular/core';
- 
 export class Pager {
   totalItems!: number;
   currentPage!: number;
@@ -13,8 +11,8 @@ export class Pager {
   constructor() {
     this.startPage = 0;
   }
-} 
- 
+}
+
 export class PaginacaoService {
   getPager(totalItems: number, currentPage: number = 1, pageSize: number) {
     // calculate total pages

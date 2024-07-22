@@ -1,6 +1,11 @@
 :root {
     --main-color: gray;
     --light-main-color: lightgray;
+    --mat-tab-header-inactive-label-text-color: black;
+}
+
+* {
+    color: black !important;
 }
 
 html,
@@ -61,14 +66,14 @@ a.btn :visited {
     width: 20%;
 }
 
-.det-17{
+.det-17 {
     width: 17%;
 }
 
-.valores{
+.valores {
     justify-content: end !important
 }
 
-.det-30{
+.det-30 {
     width: 30%;
 }

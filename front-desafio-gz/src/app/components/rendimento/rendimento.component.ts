@@ -13,6 +13,10 @@ import { RouterModule } from '@angular/router';
 import { InstrumentQuoteService } from '../../services/instrument-quote';
 import { UserTradeService } from '../../services/user-trade-service';
 import { RedDetalhamentoComponent } from './red-detalhamento/red-detalhamento.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RedGraficosComponent } from './red-graficos/red-graficos.component';
+import { UserTradeTotal } from '../../entity/user-trade-total';
+import { InstrumentQuote } from '../../entity/instrument-quote';
 
 enum TipoOperacao {
   C = 'compra',
@@ -23,7 +27,7 @@ enum TipoOperacao {
 @Component({
   selector: 'app-rendimento',
   standalone: true,
-  imports: [MatIconModule, MatCheckboxModule, CommonModule, RedDetalhamentoComponent, ReactiveFormsModule, RouterModule, MatProgressBarModule, MatFormFieldModule, MatInputModule, MatDatepickerModule],
+  imports: [MatIconModule, MatCheckboxModule, MatTabsModule, CommonModule, RedGraficosComponent, RedDetalhamentoComponent, ReactiveFormsModule, RouterModule, MatProgressBarModule, MatFormFieldModule, MatInputModule, MatDatepickerModule],
   providers: [UserTradeService, InstrumentQuoteService, provideNativeDateAdapter()],
   templateUrl: './rendimento.component.html',
   styleUrl: './rendimento.component.scss'
@@ -34,8 +38,11 @@ export class RendimentoComponent implements OnInit {
   listaAcoes: string[] = [];
   form: FormGroup;
   showdataInicial = false;
+  totais: UserTradeTotal[] = [];
+  mapaDados?: Map<any, any>;
 
   @ViewChild('appRendDetalhamento') appRendDetalhamento!: RedDetalhamentoComponent;
+  @ViewChild('appRendChart') appRendChart!: RedGraficosComponent;
 
   constructor(private userTradeService: UserTradeService,
     private instrumentQuoteService: InstrumentQuoteService,
@@ -74,8 +81,108 @@ export class RendimentoComponent implements OnInit {
     }
   }
 
-  atualizar() {
+  validateForm(formGroup: FormGroup): string {
+    const errorMessages: string[] = [];
+    if (formGroup.controls['acao'].errors) {
+      errorMessages.push('Ação não selecionada');
+    }
+    if (this.showdataInicial) {
+      if (!formGroup.controls['dataInicial'].value) {
+        errorMessages.push('Data Inicial não informada');
+      }
+
+      if (formGroup.controls['dataInicial'].value > formGroup.controls['dataFinal'].value) {
+        errorMessages.push('Data Inicial deve ser menor que   data final ');
+      }
+    }
+    if (formGroup.controls['dataFinal'].errors) {
+      errorMessages.push('Data Final não informada');
+    }
+    return errorMessages.join(',');
+  }
+
+  async atualizar() {
+    const validacao = this.validateForm(this.form);
+    if (validacao) {
+      this._snackBar.open(validacao);
+      setTimeout(() => {
+        this._snackBar.dismiss();
+      }, 5000);
+      return;
+    }
+
+    await this.calcularTotais();
     this.appRendDetalhamento.atualizar();
+    this.appRendChart.setChartData()
+  }
+
+  async calcularTotais() {
+    const acaoNoDia: InstrumentQuote[] = await this.listarPorInstrumenteeData();
+    const somatorios = await this.buscarSomatorios();
+    console.log('acaoNoDia :::: ', acaoNoDia);
+    console.log('this.somatorios :::: ', JSON.parse(JSON.stringify(somatorios)));
+    this.mapaDados = new Map();
+    for (const dado of acaoNoDia) {
+      this.mapaDados.set(dado.simbol, dado);
+    }
+    this.totais = [];
+    somatorios
+      .forEach((som: UserTradeTotal) => {
+        const instrument = som.instrument;
+        som.tipoOperacao = 'Valor De Compra';
+        som.valorTotal = som.valorTotalCompra;
+        const quantidade = som.quantidadeCompra - som.quantidadeVenda;
+        som.quantidade = quantidade;
+        this.totais.push(JSON.parse(JSON.stringify(som)));
+        som.quantidade = undefined;
+        som.instrument = '';
+        som.tipoOperacao = '';
+        let precoMedio = JSON.parse(JSON.stringify(som));
+        precoMedio.tipoOperacao = `Preço Medio Compra`;
+        precoMedio.valorTotal = som.valorTotalCompra / som.quantidadeCompra;
+        this.totais.push(JSON.parse(JSON.stringify(precoMedio)));
+        if (this.mapaDados?.get(instrument)?.price) {
+          let precoMercado = JSON.parse(JSON.stringify(som));
+          precoMercado.tipoOperacao = `Preço Mercado`;
+          precoMercado.valorTotal = this.mapaDados?.get(instrument)?.price;
+          this.totais.push(precoMercado);
+          let vendaMercado = JSON.parse(JSON.stringify(som));
+          vendaMercado.tipoOperacao = `Venda Mercado`;
+          vendaMercado.valorTotal = quantidade * this.mapaDados?.get(instrument)?.price;
+          this.totais.push(vendaMercado);
+          let rendimentoMonetario = JSON.parse(JSON.stringify(som));
+          rendimentoMonetario.tipoOperacao = 'Rendimento';
+          rendimentoMonetario.tipo = 'R';
+          rendimentoMonetario.valorTotal = vendaMercado.valorTotal - som.valorTotalCompra;
+          this.totais.push(JSON.parse(JSON.stringify(rendimentoMonetario)));
+          som.tipo = 'P';
+          som.valorTotal = (rendimentoMonetario.valorTotal && som.valorTotalCompra) ? rendimentoMonetario.valorTotal / (som.valorTotalCompra / 100) : 0;
+          som.tipoOperacao = '';
+          som.valorPercent = isNaN(som.valorTotal) ? '0' : '' + som.valorTotal.toFixed(2) + '%';
+          this.totais.push(JSON.parse(JSON.stringify(som)));
+        }
+      });
+  }
+
+  async listarPorInstrumenteeData(): Promise<InstrumentQuote[]> {
+    return await this.instrumentQuoteService.listarPorInstrumenteeData(
+      this.form.get('acao')?.value,
+      this.form.get('dataFinal')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-'),
+    );
+  }
+
+  async buscarSomatorios() {
+    if (this.form.get('dataInicial')?.value) {
+      return await this.userTradeService.somatorioIntrumentDateInicialDataFinal(
+        this.form.get('acao')?.value,
+        this.form.get('dataInicial')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-'),
+        this.form.get('dataFinal')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-'),
+      );
+    }
+    return await this.userTradeService.somatorioIntrumentDate(
+      this.form.get('acao')?.value,
+      this.form.get('dataFinal')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-'),
+    );
   }
 
 }
