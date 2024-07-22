@@ -16,6 +16,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { InstrumentQuoteService } from '../../services/instrument-quote';
 import { UserTradeTotal } from '../../entity/user-trade-total';
 import { InstrumentQuote } from '../../entity/instrument-quote';
+import { RendimentosTotaisComponent } from './rendimentos-totais/rendimentos-totais.component';
 
 
 enum TipoOperacao {
@@ -31,7 +32,7 @@ class DadoTabela {
 @Component({
   selector: 'app-rendimento',
   standalone: true,
-  imports: [MatIconModule, CommonModule, PaginationComponent, ReactiveFormsModule, RouterModule, MatProgressBarModule, MatFormFieldModule, MatInputModule, MatDatepickerModule],
+  imports: [MatIconModule, RendimentosTotaisComponent, CommonModule, PaginationComponent, ReactiveFormsModule, RouterModule, MatProgressBarModule, MatFormFieldModule, MatInputModule, MatDatepickerModule],
   providers: [UserTradeService, InstrumentQuoteService, provideNativeDateAdapter()],
   templateUrl: './rendimento.component.html',
   styleUrl: './rendimento.component.scss'
@@ -122,22 +123,24 @@ export class RendimentoComponent implements OnInit {
         .forEach(som => {
           const instrument = som.instrument;
           som.tipoOperacao = 'Valor De Compra';
-          som.valorTotal = som.valorTotalCompra;        
+          som.valorTotal = som.valorTotalCompra;
           this.totais.push(JSON.parse(JSON.stringify(som)));
-          som.instrument = '';
-          som.valorTotal = som.quantidade * this.mapaDados?.get(instrument)?.price;
-          som.tipoOperacao = 'Valor De Venda Hoje';         
-          this.totais.push(JSON.parse(JSON.stringify(som)));
-          som.valorTotal = (som.quantidade > 0) ? (som.valorTotal - som.valorTotalCompra) : 0;
-          som.tipoOperacao = 'Rendimento R$'; 
-          som.tipo = 'R';         
-          this.totais.push(JSON.parse(JSON.stringify(som)));
-          const percent = JSON.parse(JSON.stringify(som));
-          percent.valorTotal = som.valorTotal / (som.valorTotalCompra / 100);
-          percent.tipoOperacao = 'Rendimento %';
-          percent.valorPercent = '' + percent.valorTotal.toFixed(2)+ '';
-          percent.tipo = 'P';
-          this.totais.push(JSON.parse(JSON.stringify(percent)));
+          if (this.mapaDados?.get(instrument)?.price) {
+            som.instrument = '';
+            som.valorTotal = som.quantidade * this.mapaDados?.get(instrument)?.price;
+            som.tipoOperacao = 'Valor De Venda Hoje';
+            this.totais.push(JSON.parse(JSON.stringify(som)));
+            som.valorTotal = (som.quantidade > 0) ? (som.valorTotal - som.valorTotalCompra) : 0;
+            som.tipoOperacao = 'Rendimento R$';
+            som.tipo = 'R';
+            this.totais.push(JSON.parse(JSON.stringify(som)));
+            const percent = JSON.parse(JSON.stringify(som));
+            percent.valorTotal = percent.valorTotal / (percent.valorTotalCompra / 100);
+            percent.tipoOperacao = 'Rendimento %';
+            percent.valorPercent = '' + percent.valorTotal.toFixed(2) + '';
+            percent.tipo = 'P';
+            this.totais.push(JSON.parse(JSON.stringify(percent)));
+          }
         });
 
 
