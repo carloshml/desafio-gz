@@ -36,41 +36,8 @@
                 <button type="submit" class="btn-atualizar"> atualizar </button>
             </div>
         </div>
-
     </form>
-    <section>
-        <h2 *ngIf="!showdataInicial">Negociações em {{this.form.get('dataFinal')?.value | date:'dd/MM/yyyy' }} </h2>
-        <h2 *ngIf="showdataInicial">Negociações entre {{this.form.get('dataInicial')?.value | date:'dd/MM/yyyy' }} -
-            {{this.form.get('dataFinal')?.value | date:'dd/MM/yyyy' }} </h2>
 
-        <div class="row titulo">
-            <div class="col det-17 ">Ação</div>
-            <div class="col det-17 ">Data </div>
-            <div class="col det-17 ">Preço</div>
-            <div class="col det-17 ">Operação</div>
-            <div class="col det-5"> Qtd </div>
-            <div class="col det-5"> Total </div>
-        </div>
-
-        <div *ngIf="acoes.length > 0; else semAcoes">
-            @for (acao of acoes; track acao) {
-            <div class="row elemento">
-                <div class="col det-17 ">{{acao.instrument}}</div>
-                <div class="col det-17 ">{{acao.data | date:'dd/MM/yyyy' }}</div>
-                <div class="col det-17 valores ">{{acao.preco | currency:'BRL' }}</div>
-                <div class="col det-17 ">  {{ acao.tipoOperacao}}</div>
-                <div class="col det-5"> {{ acao.quantidade }} </div>
-                <div class="col det-17 valores"> {{ acao.valorTotal | currency:'BRL' }} </div>
-            </div>
-            }
-        </div>
-        <app-pagination [pager]="pager" (paginationEmmiter)="setPage($event)">
-        </app-pagination>
-        <app-rendimentos-totais [totais]="totais"> </app-rendimentos-totais>
-        <ng-template #semAcoes>
-            <div class="row elemento">
-                Não Há Registros
-            </div>
-        </ng-template>
-    </section>
+    <app-red-detalhamento #appRendDetalhamento  [form]="this.form" [showdataInicial]="showdataInicial"  > </app-red-detalhamento>
+    
 </section>
