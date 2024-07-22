@@ -1,5 +1,5 @@
 .disabled {
-    background:  var(--light-main-color) !important;
+    background: var(--light-main-color) !important;
 }
 
 .pagination li {
@@ -13,4 +13,8 @@
 
 .pagination .active {
     background: #1364ff;
+}
+
+ul {
+    text-align: center;
 }
