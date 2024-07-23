@@ -130,9 +130,11 @@ export class RendimentoComponent implements OnInit {
       .forEach((som: UserTradeTotal) => {
         const instrument = som.instrument;
         som.tipoOperacao = 'Valor De Compra';
-        som.valorTotal = som.valorTotalCompra;
+
         const quantidade = som.quantidadeCompra - som.quantidadeVenda;
         som.quantidade = quantidade;
+        let valorMedioCompra = (som.valorTotalCompra / som.quantidadeCompra) * quantidade;
+        som.valorTotal = valorMedioCompra;
         this.totais.push(JSON.parse(JSON.stringify(som)));
         som.quantidade = undefined;
         som.instrument = '';
@@ -153,7 +155,7 @@ export class RendimentoComponent implements OnInit {
           let rendimentoMonetario = JSON.parse(JSON.stringify(som));
           rendimentoMonetario.tipoOperacao = 'Rendimento';
           rendimentoMonetario.tipo = 'R';
-          rendimentoMonetario.valorTotal = vendaMercado.valorTotal - som.valorTotalCompra;
+          rendimentoMonetario.valorTotal = vendaMercado.valorTotal - valorMedioCompra;
           this.totais.push(JSON.parse(JSON.stringify(rendimentoMonetario)));
           som.tipo = 'P';
           som.valorTotal = (rendimentoMonetario.valorTotal && som.valorTotalCompra) ? rendimentoMonetario.valorTotal / (som.valorTotalCompra / 100) : 0;
