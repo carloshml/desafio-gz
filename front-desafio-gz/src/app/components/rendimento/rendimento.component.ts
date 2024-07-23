@@ -40,7 +40,7 @@ export class RendimentoComponent implements OnInit {
   showdataInicial = false;
   totais: UserTradeTotal[] = [];
   mapaDados?: Map<any, any>;
-
+  selectedIndex: number = 1;
   @ViewChild('appRendDetalhamento') appRendDetalhamento!: RedDetalhamentoComponent;
   @ViewChild('appRendChart') appRendChart!: RedGraficosComponent;
 
@@ -113,10 +113,10 @@ export class RendimentoComponent implements OnInit {
 
     await this.calcularTotais();
     this.appRendDetalhamento.atualizar();
-    this.appRendChart.setChartData()
+    this.appRendChart.setChartData(this.totais);
   }
 
-  async calcularTotais() {
+  async calcularTotais(): Promise<void> {
     const acaoNoDia: InstrumentQuote[] = await this.listarPorInstrumenteeData();
     const somatorios = await this.buscarSomatorios();
     console.log('acaoNoDia :::: ', acaoNoDia);
@@ -183,6 +183,12 @@ export class RendimentoComponent implements OnInit {
       this.form.get('acao')?.value,
       this.form.get('dataFinal')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-'),
     );
+  }
+
+  atualizarGraficos() {
+    if (this.selectedIndex == 1) {
+      this.appRendChart.setChartData(this.totais);
+    }
   }
 
 }

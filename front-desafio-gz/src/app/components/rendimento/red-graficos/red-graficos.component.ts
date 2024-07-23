@@ -4,12 +4,13 @@ import { BaseChartDirective } from 'ng2-charts';
 import { MatButton } from '@angular/material/button';
 import { UserTradeTotal } from '../../../entity/user-trade-total';
 import { CommonModule } from '@angular/common';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 @Component({
   selector: 'app-red-graficos',
   standalone: true,
-  imports: [MatButton, BaseChartDirective, CommonModule],
+  imports: [MatButton, BaseChartDirective, CommonModule, MatProgressBarModule],
   templateUrl: './red-graficos.component.html',
   styleUrl: './red-graficos.component.scss'
 })
@@ -92,9 +93,13 @@ export class RedGraficosComponent implements AfterViewInit {
   ngAfterViewInit(): void {
   }
 
-  setChartData() {
+  setChartData(totais: UserTradeTotal[]) {
+    console.log('Atualizou graficos');
     this.showChart = false;
-    const labels = this.totais.filter(e => e.instrument).map(e => { return e.instrument });
+    const labels = totais.filter(e => e.instrument).map(e => { return e.instrument });
+    this.totais = totais;
+    console.log(' labels', labels);
+    console.log(' totais', this.totais);
     this.criarGrafico1(labels);
     this.criarGrafico2(labels);
     this.criarGrafico3(labels);

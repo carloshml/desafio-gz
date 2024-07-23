@@ -1,15 +1,18 @@
-<div class="chart-wrapper" *ngIf="showChart">
-
+<mat-progress-bar *ngIf="!showChart" mode="indeterminate"></mat-progress-bar>
+<div *ngIf="showChart">
     <h2> Compra / Venda </h2>
-    <canvas baseChart [data]="dados1" [options]="barChartOptions1" [type]="barChartType">
-    </canvas>
-
-
+    <div class="chart-wrapper">
+        <canvas baseChart [data]="dados1" [options]="barChartOptions1" [type]="barChartType">
+        </canvas>
+    </div>
     <h2> Preços </h2>
-    <canvas baseChart [data]="dados2" [options]="barChartOptions2" [type]="barChartType">
-    </canvas>
-
+    <div class="chart-wrapper">
+        <canvas baseChart [data]="dados2" [options]="barChartOptions2" [type]="barChartType">
+        </canvas>
+    </div>
     <h2> Rendimentos </h2>
-    <canvas baseChart [data]="dados3" [options]="barChartOptions3" [type]="barChartType">
-    </canvas>
+    <div class="chart-wrapper">
+        <canvas baseChart [data]="dados3" [options]="barChartOptions3" [type]="barChartType">
+        </canvas>
+    </div>
 </div>
