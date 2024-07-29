@@ -18,7 +18,7 @@ public interface UserTradeRepository extends JpaRepository<UserTrade, Long> {
         @Query("select count(*) from UserTrade")
         Long listarQtdTotal();
 
-        @Query("select a from UserTrade a where a.instrument like :instrument  and   a.data =  :date order by instrument  ")
+        @Query("select a from UserTrade a where a.instrument like :instrument  and   a.data =  :date   ")
         Page<UserTrade> listarPorInstrumenteeData(String instrument, LocalDate date, PageRequest pageRequest);
 
         @Query("select count(*)  from UserTrade a where a.instrument like :instrument  and   a.data =  :date ")
@@ -49,7 +49,7 @@ public interface UserTradeRepository extends JpaRepository<UserTrade, Long> {
                         + "   GROUP BY    a.instrument  order by a.instrument ")
         List<Object[]> somatorioIntrumentDateInicialDataFinal(String instrument, LocalDate dIni, LocalDate dFim);
 
-        @Query("select a from UserTrade a where a.instrument like :instrument  and  a.data  >=  :dIni and   a.data  <=  :dFim   order by instrument  ")
+        @Query("select a from UserTrade a where a.instrument like :instrument  and  a.data  >=  :dIni and   a.data  <=  :dFim    ")
         Page<UserTrade> listarPorInstrumenteeDateInicialDataFinal(String instrument, LocalDate dIni, LocalDate dFim,
                         PageRequest pageRequest);
 

@@ -29,26 +29,10 @@ public class UserTradeService {
         return intrumQuote.get();
     }
 
-    public List<UserTrade> getAll() {
-        return userTradeRepositoryRepository.findAll();
-    }
-
-    public List<UserTrade> findAllPaginado(int page, int qtd) {
-        PageRequest pageRequest = PageRequest.of(
-                page,
-                qtd,
-                Sort.Direction.DESC,
-                "data");
-        Page<UserTrade> pagerProcessos = userTradeRepositoryRepository.findAll(pageRequest);
-        return pagerProcessos.getContent();
-    }
-
-    public Long listarQtdTotal() {
-        return userTradeRepositoryRepository.listarQtdTotal();
-    }
-
     public List<UserTrade> listarPorInstrumenteeData(String instrument, String date, int page, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        PageRequest pageRequest = PageRequest.of(page, pageSize,
+                Sort.Direction.ASC,
+                "instrument");
         if (instrument.equals("todas")) {
             instrument = "%";
         }
@@ -114,7 +98,9 @@ public class UserTradeService {
             String dataFinal,
             int page,
             int pageSize) {
-        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        PageRequest pageRequest = PageRequest.of(page, pageSize,
+                Sort.Direction.ASC,
+                "instrument");
         if (instrument.equals("todas")) {
             instrument = "%";
         }
