@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { catchError, lastValueFrom, Observable, of, throwError } from "rxjs";
+import { catchError, lastValueFrom, throwError } from "rxjs";
 
 
 
@@ -11,38 +11,7 @@ export class UserTradeService {
     API = `http://localhost:8080/userTrade`;
 
     constructor(public http: HttpClient) {
-    }
-
-
-    listar() {
-        return lastValueFrom(
-            this.http
-                .get<any>(this.API)
-                .pipe(
-                    catchError(e => throwError(() => this.handleErrorRequisicao(e)))
-                )
-        );
-    }
-
-    listarQtdTotal() {
-        return lastValueFrom(
-            this.http
-                .get<any>(`${this.API}/listarQtdTotal`)
-                .pipe(
-                    catchError(e => throwError(() => this.handleErrorRequisicao(e)))
-                )
-        );
-    }
-
-    getById(id: number) {
-        return lastValueFrom(
-            this.http
-                .get<any>(`${this.API}/${id}`)
-                .pipe(
-                    catchError(e => throwError(() => this.handleErrorRequisicao(e)))
-                )
-        );
-    }
+    } 
 
 
     private handleErrorRequisicao(e: any) {
@@ -55,11 +24,11 @@ export class UserTradeService {
     * @param page  min = 0
     * @param quantidade
    */
-    listarPorInstrumenteeData(acao: string, data: string, page: number, quantidade: number) {
+    listarPorInstrumenteeData(acao: string, data: string, page: number, qtd: number) {
         return lastValueFrom(
 
             this.http
-                .get<any>(`${this.API}/listarPorInstrumenteeData/${acao}/${data}/${page}/${quantidade}`)
+                .get<any>(`${this.API}/listarPorInstrumenteeData?acao=${acao}&data=${data}&page=${page}&qtd=${qtd}`)
                 .pipe(
                     catchError(e => throwError(() => this.handleErrorRequisicao(e)))
                 )
@@ -76,7 +45,7 @@ export class UserTradeService {
         return lastValueFrom(
 
             this.http
-                .get<any>(`${this.API}/listarPorInstrumenteeDataTotal/${acao}/${data} `)
+                .get<any>(`${this.API}/listarPorInstrumenteeDataTotal?acao=${acao}&data=${data}`)
                 .pipe(
                     catchError(e => throwError(() => this.handleErrorRequisicao(e)))
                 )
@@ -86,7 +55,7 @@ export class UserTradeService {
     somatorioIntrumentDate(acao: any, data: any): any {
         return lastValueFrom(
             this.http
-                .get<any>(`${this.API}/somatorioIntrumentDate/${acao}/${data} `)
+                .get<any>(`${this.API}/somatorioIntrumentDate?acao=${acao}&data=${data}`)
                 .pipe(
                     catchError(e => throwError(() => this.handleErrorRequisicao(e)))
                 )
@@ -116,7 +85,7 @@ export class UserTradeService {
     somatorioIntrumentDateInicialDataFinal(acao: string, dataInicial: string, dataFinal: string): any {
         return lastValueFrom(
             this.http
-                .get<any>(`${this.API}/somatorioIntrumentDateInicialDataFinal/${acao}/${dataInicial}/${dataFinal}`)
+                .get<any>(`${this.API}/somatorioIntrumentDateInicialDataFinal?acao=${acao}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`)
                 .pipe(
                     catchError(e => throwError(() => this.handleErrorRequisicao(e)))
                 )
@@ -126,12 +95,12 @@ export class UserTradeService {
     /**
    * @param acao 
    * @param dataInicial  yyyy-mm-dd
-   *  @param dataFinal  yyyy-mm-dd 
+   * @param dataFinal  yyyy-mm-dd 
    */
-    listarPorInstrumenteDateInicialDataFinal(acao: string, dataInicial: string, dataFinal: string, page: number, quantidade: number): any {
+    listarPorInstrumenteDateInicialDataFinal(acao: string, dataInicial: string, dataFinal: string, page: number, qtd: number): any {
         return lastValueFrom(
             this.http
-                .get<any>(`${this.API}/listarPorInstrumenteDateInicialDataFinal/${acao}/${dataInicial}/${dataFinal}/${page}/${quantidade}`)
+                .get<any>(`${this.API}/listarPorInstrumenteDateInicialDataFinal?acao=${acao}&dataInicial=${dataInicial}&dataFinal=${dataFinal}&page=${page}&qtd=${qtd}`)
                 .pipe(
                     catchError(e => throwError(() => this.handleErrorRequisicao(e)))
                 )
