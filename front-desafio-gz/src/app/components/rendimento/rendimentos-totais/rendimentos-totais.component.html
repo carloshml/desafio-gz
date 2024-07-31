@@ -1,24 +1,27 @@
 <h2>Totais Ações </h2>
 <div class="row titulo">
-    <div class="col det-5"> qtd </div>
-    <div class="col det-17 ">Ação</div>
-    <div class="col det-17 "> </div>
-    <div class="col det-30 ">Operação</div>
-    <div class="col det-17 "> Total </div>
+    <div class="col det-10 "> quantidade </div>
+    <div class="col det-10 "> ação </div>
+    <div class="col det-10 "> Preço compra </div>
+    <div class="col det-10 "> Preço Mercado </div>
+    <div class="col det-10 "> valor Compra </div>
+    <div class="col det-10 "> valor Compra </div>
+    <div class="col det-10 "> venda Mercado </div>
+    <div class="col det-10 "> rendimento </div>
+    <div class="col det-10 "> rendimento % </div>
 </div>
 @for (acao of totais; track acao) {
 <div class="row elemento">
-    <div class="col det-5"> {{ acao.quantidade }} </div>
-    <div class="col det-17 ">{{acao.instrument}}</div>
-    <div class="col det-17 "> </div>
-    <div class="col det-30 ">{{acao.tipoOperacao}}</div>
-
-    <div *ngIf="acao.tipo  != 'P'"
-        [ngClass]="{'verde': acao.valorTotal  >0 && acao.tipo  == 'R' ,  'vermelho': acao.valorTotal  < 0 && acao.tipo  == 'R'  }"
-        class="col det-17 valores"> {{ acao.valorTotal | currency:'BRL' }} </div>
-    <div *ngIf="acao.tipo === 'P'"
-        [ngClass]="{'verde': acao.valorTotal  >0 && acao.tipo  == 'P' ,  'vermelho': acao.valorTotal  < 0  && acao.tipo  == 'P' }"
-        class="col det-17 valores"> {{acao.valorPercent}} </div>
-
+    <div class="col det-10"> {{acao.quantidadeAtual }} </div>
+    <div class="col det-10"> {{acao.instrument }} </div>
+    <div class="col det-10"> {{acao.precoMedioCompra | currency:'BRL' }} </div>
+    <div class="col det-10"> {{acao.precoMercado | currency:'BRL' }} </div>
+    <div class="col det-10"> {{acao.valorCompra | currency:'BRL' }} </div>
+    <div class="col det-10"> {{acao.valorTotalCompra | currency:'BRL' }} </div>
+    <div class="col det-10"> {{acao.vendaMercado | currency:'BRL' }} </div>
+    <div class="col det-10" [ngClass]="{'verde': acao.rendimento >0 , 'vermelho': acao.rendimento < 0 }">
+        {{acao.rendimento | currency:'BRL' }} </div>
+    <div class="col det-10" [ngClass]="{'verde': acao.rendimentoPercent >0 , 'vermelho': acao.rendimentoPercent < 0 }">
+        {{acao.rendimentoPercent | currency:'BRL' }} </div>
 </div>
 }

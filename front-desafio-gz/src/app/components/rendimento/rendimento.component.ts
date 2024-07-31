@@ -125,45 +125,9 @@ export class RendimentoComponent implements OnInit {
     for (const dado of acaoNoDia) {
       this.mapaDados.set(dado.simbol, dado);
     }
-    this.totais = [];
-    somatorios
-      .forEach((som: UserTradeTotal) => {
-        const instrument = som.instrument;
-        som.tipoOperacao = 'Valor De Compra';
+    this.totais = somatorios;
+    console.log('  :::: ', this.totais);
 
-        const quantidade = som.quantidadeCompra - som.quantidadeVenda;
-        som.quantidade = quantidade;
-        let valorMedioCompra = (som.valorTotalCompra / som.quantidadeCompra) * quantidade;
-        som.valorTotal = valorMedioCompra;
-        this.totais.push(JSON.parse(JSON.stringify(som)));
-        som.quantidade = undefined;
-        som.instrument = '';
-        som.tipoOperacao = '';
-        let precoMedio = JSON.parse(JSON.stringify(som));
-        precoMedio.tipoOperacao = `Preço Medio Compra`;
-        precoMedio.valorTotal = som.valorTotalCompra / som.quantidadeCompra;
-        this.totais.push(JSON.parse(JSON.stringify(precoMedio)));
-        if (this.mapaDados?.get(instrument)?.price) {
-          let precoMercado = JSON.parse(JSON.stringify(som));
-          precoMercado.tipoOperacao = `Preço Mercado`;
-          precoMercado.valorTotal = this.mapaDados?.get(instrument)?.price;
-          this.totais.push(precoMercado);
-          let vendaMercado = JSON.parse(JSON.stringify(som));
-          vendaMercado.tipoOperacao = `Venda Mercado`;
-          vendaMercado.valorTotal = quantidade * this.mapaDados?.get(instrument)?.price;
-          this.totais.push(vendaMercado);
-          let rendimentoMonetario = JSON.parse(JSON.stringify(som));
-          rendimentoMonetario.tipoOperacao = 'Rendimento';
-          rendimentoMonetario.tipo = 'R';
-          rendimentoMonetario.valorTotal = vendaMercado.valorTotal - valorMedioCompra;
-          this.totais.push(JSON.parse(JSON.stringify(rendimentoMonetario)));
-          som.tipo = 'P';
-          som.valorTotal = (rendimentoMonetario.valorTotal && som.valorTotalCompra) ? rendimentoMonetario.valorTotal / (som.valorTotalCompra / 100) : 0;
-          som.tipoOperacao = '';
-          som.valorPercent = isNaN(som.valorTotal) ? '0' : '' + som.valorTotal.toFixed(2) + '%';
-          this.totais.push(JSON.parse(JSON.stringify(som)));
-        }
-      });
   }
 
   async listarPorInstrumenteeData(): Promise<InstrumentQuote[]> {

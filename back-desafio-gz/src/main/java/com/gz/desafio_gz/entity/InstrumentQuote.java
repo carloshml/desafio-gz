@@ -25,10 +25,10 @@ public class InstrumentQuote implements Serializable {
     private Long id;
 
     @NotNull
-    private String simbol;
+    private String simbol = "";
 
     @NotNull
-    private BigDecimal price;
+    private BigDecimal price = BigDecimal.ZERO;
 
     @NotNull
     private LocalDate date;

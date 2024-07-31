@@ -1,5 +1,6 @@
 package com.gz.desafio_gz.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -43,7 +44,21 @@ public class InstrumentQuoteService {
         if (simbol.equals("todas")) {
             simbol = "%";
         }
-        return instrumentQuoteRepository.listarPorInstrumenteeDataTotal(simbol, util.stringToLocalDate(data));
+        return instrumentQuoteRepository.listarPorInstrumenteeDataTotal(simbol, util.stringToLocalDate(data)).get();
+    }
+
+    public HashMap<String, InstrumentQuote> getHashPorInstrumenteeData(String simbol, String data) {
+        var mapaDados = new HashMap<String, InstrumentQuote>();
+        if (simbol.equals("todas")) {
+            simbol = "%";
+        }
+        var respose = listarPorInstrumenteeData(simbol, data);
+        if (!respose.isEmpty()) {            
+            for (InstrumentQuote dado : respose) {
+                mapaDados.put(dado.getSimbol(), dado);
+            }
+        }
+        return  mapaDados;
     }
 
 }

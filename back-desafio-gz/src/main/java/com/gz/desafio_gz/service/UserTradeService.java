@@ -19,9 +19,11 @@ public class UserTradeService {
 
     private Util util = new Util();
     UserTradeRepository userTradeRepositoryRepository;
+    InstrumentQuoteService instrumentQuoteService;
 
-    public UserTradeService(UserTradeRepository iqr) {
-        userTradeRepositoryRepository = iqr;
+    public UserTradeService(UserTradeRepository utr, InstrumentQuoteService iqr) {
+        userTradeRepositoryRepository = utr;
+        instrumentQuoteService = iqr;
     }
 
     public UserTrade getById(Long id) {
@@ -58,17 +60,12 @@ public class UserTradeService {
         if (instrument.equals("todas")) {
             instrument = "%";
         }
-        var reponse = userTradeRepositoryRepository.somatorioIntrumentDate(instrument,
+        var sumResponse = userTradeRepositoryRepository.somatorioIntrumentDate(instrument,
                 util.stringToLocalDate(date));
+        var result = instrumentQuoteService.getHashPorInstrumenteeData(instrument, date);
         List<SomatorioResponse> somatorios = new ArrayList<>();
-        for (Object[] obj : reponse) {
-            var somatorio = new SomatorioResponse();
-            somatorio.setInstrument("" + obj[0]);
-            somatorio.setValorTotalCompra(new BigDecimal("" + obj[1]));
-            somatorio.setValorTotalVenda(new BigDecimal("" + obj[2]));
-            somatorio.setQuantidadeCompra(Long.valueOf("" + obj[3]));
-            somatorio.setQuantidadeVenda(Long.valueOf("" + obj[4]));
-            somatorios.add(somatorio);
+        for (Object[] obj : sumResponse) {
+            somatorios.add(new SomatorioResponse().calcularValores(obj, result.get("" + obj[0])));
         }
         return somatorios;
     }
@@ -78,18 +75,13 @@ public class UserTradeService {
         if (instrument.equals("todas")) {
             instrument = "%";
         }
-        var reponse = userTradeRepositoryRepository.somatorioIntrumentDateInicialDataFinal(instrument,
+        var sumResponse = userTradeRepositoryRepository.somatorioIntrumentDateInicialDataFinal(instrument,
                 util.stringToLocalDate(dataInicial),
                 util.stringToLocalDate(dataFinal));
+        var result = instrumentQuoteService.getHashPorInstrumenteeData(instrument, dataFinal);
         List<SomatorioResponse> somatorios = new ArrayList<>();
-        for (Object[] obj : reponse) {
-            var somatorio = new SomatorioResponse();
-            somatorio.setInstrument("" + obj[0]);
-            somatorio.setValorTotalCompra(new BigDecimal("" + obj[1]));
-            somatorio.setValorTotalVenda(new BigDecimal("" + obj[2]));
-            somatorio.setQuantidadeCompra(Long.valueOf("" + obj[3]));
-            somatorio.setQuantidadeVenda(Long.valueOf("" + obj[4]));
-            somatorios.add(somatorio);
+        for (Object[] obj : sumResponse) {
+            somatorios.add(new SomatorioResponse().calcularValores(obj, result.get("" + obj[0])));
         }
         return somatorios;
     }

@@ -108,8 +108,8 @@ export class RedGraficosComponent implements AfterViewInit {
   }
 
   criarGrafico1(labels: string[]) {
-    const totalValorCompra = this.totais.filter(e => e.tipoOperacao === 'Valor De Compra').map(e => { return e.valorTotal; })
-    const totalValorVendaMercado = this.totais.filter(e => e.tipoOperacao === 'Venda Mercado').map(e => { return e.valorTotal; })
+    const totalValorCompra = this.totais.map(e => { return e.valorCompra; })
+    const totalValorVendaMercado = this.totais.map(e => { return e.vendaMercado; })
     this.dados1.labels = labels;
     this.dados1.datasets = [
       { data: totalValorCompra, label: 'Valor De Compra' },
@@ -125,8 +125,8 @@ export class RedGraficosComponent implements AfterViewInit {
   }
 
   criarGrafico2(labels: string[]) {
-    const precoMedio = this.totais.filter(e => e.tipoOperacao === 'Preço Medio Compra').map(e => { return e.valorTotal; });
-    const precoMercado = this.totais.filter(e => e.tipoOperacao === 'Preço Mercado').map(e => { return e.valorTotal; });
+    const precoMedio = this.totais.map(e => { return e.precoMedioCompra; });
+    const precoMercado = this.totais.map(e => { return e.precoMercado; });
     this.dados2.labels = labels;
     this.dados2.datasets = [
       { data: precoMedio, label: 'Preço Medio Compra' },
@@ -142,7 +142,7 @@ export class RedGraficosComponent implements AfterViewInit {
   }
 
   criarGrafico3(labels: string[]) {
-    const rendimentos = this.totais.filter(e => e.tipoOperacao === 'Rendimento').map(e => { return e.valorTotal; });
+    const rendimentos = this.totais.map(e => { return e.rendimento; });
     this.dados3.labels = labels;
     this.dados3.datasets = [
       { data: rendimentos, label: 'Rendimento' }
