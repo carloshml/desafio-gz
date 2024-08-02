@@ -75,4 +75,15 @@ public class UserTradeController {
         return ResponseEntity.ok(userTradeResp);
     }
 
+    @GetMapping(value = "/listarPorInstrumenteDateInicialDataFinalTotal")
+    public ResponseEntity<Long> listarPorInstrumenteDateInicialDataFinalTotal(
+            @RequestParam String acao,
+            @RequestParam String dataInicial,
+            @RequestParam String dataFinal ) {
+        var userTradeResp = userTradeService.listarPorInstrumenteDateInicialDataFinalTotal(acao, dataInicial, dataFinal);
+        return ResponseEntity.ok(userTradeResp);
+    }
+
+    
+
 }

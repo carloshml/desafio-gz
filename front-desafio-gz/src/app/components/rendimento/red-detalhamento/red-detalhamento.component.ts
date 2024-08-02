@@ -29,8 +29,8 @@ export class RedDetalhamentoComponent {
 
   procurando: boolean = false;
   acoes: UserTrade[] = [];
- 
-  
+
+
 
   // atributos para a paginacao
   pager: Pager = new Pager();
@@ -49,17 +49,27 @@ export class RedDetalhamentoComponent {
   }
 
   async atualizar() {
-    try {      
+    try {
       this.pager = new Pager();
-      this.totalElementos = await this.userTradeService.listarPorInstrumenteeDataTotal(
-        this.form.get('acao')?.value,
-        this.form.get('dataFinal')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-'),
-      );
+      this.totalElementos = await this.buscarTotalElementos();
       this.setPage(1);
       console.log('totalElementos :::: ', this.totalElementos);
     } catch (error) {
       console.error('error :::: ', error);
     }
+  }
+  async buscarTotalElementos(): Promise<number> {
+    if (this.form.get('dataInicial')?.value) {
+      return await this.userTradeService.listarPorInstrumenteDateInicialDataFinalTotal(
+        this.form.get('acao')?.value,
+        this.form.get('dataInicial')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-'),
+        this.form.get('dataFinal')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-')
+      );
+    }
+    return await this.userTradeService.listarPorInstrumenteeDataTotal(
+      this.form.get('acao')?.value,
+      this.form.get('dataFinal')?.value.toLocaleDateString('pt-BR').split('/').reverse().join('-'),
+    );
   }
 
   async setPage(page: number) {

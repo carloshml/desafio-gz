@@ -103,4 +103,16 @@ public class UserTradeService {
                 pageRequest);
         return userTradesPage.getContent();
     }
+
+    public Long listarPorInstrumenteDateInicialDataFinalTotal(String instrument, String dataInicial, String dataFinal) {
+        if (instrument.equals("todas")) {
+            instrument = "%";
+        }
+        return userTradeRepositoryRepository.listarPorInstrumenteDateInicialDataFinalTotal(instrument, 
+        util.stringToLocalDate(dataInicial),
+        util.stringToLocalDate(dataFinal));
+
+    }
+
+    
 }

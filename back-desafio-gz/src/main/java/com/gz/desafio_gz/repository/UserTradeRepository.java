@@ -53,4 +53,7 @@ public interface UserTradeRepository extends JpaRepository<UserTrade, Long> {
         Page<UserTrade> listarPorInstrumenteeDateInicialDataFinal(String instrument, LocalDate dIni, LocalDate dFim,
                         PageRequest pageRequest);
 
+        @Query("select count(*)  from UserTrade a where a.instrument like :instrument  and  a.data  >=  :dIni and   a.data  <=  :dFim    ")
+        Long listarPorInstrumenteDateInicialDataFinalTotal(String instrument, LocalDate dIni, LocalDate dFim);
+
 }

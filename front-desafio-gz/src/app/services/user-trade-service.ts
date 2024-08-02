@@ -11,7 +11,7 @@ export class UserTradeService {
     API = `http://localhost:8080/userTrade`;
 
     constructor(public http: HttpClient) {
-    } 
+    }
 
 
     private handleErrorRequisicao(e: any) {
@@ -51,6 +51,23 @@ export class UserTradeService {
                 )
         );
     }
+
+    /**
+    * @param acao 
+    * @param data  yyyy-mm-dd 
+    */
+    listarPorInstrumenteDateInicialDataFinalTotal(acao: string, dataInicial: string, dataFinal: string) {
+        return lastValueFrom(
+
+            this.http
+                .get<any>(`${this.API}/listarPorInstrumenteDateInicialDataFinalTotal?acao=${acao}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`)
+                .pipe(
+                    catchError(e => throwError(() => this.handleErrorRequisicao(e)))
+                )
+        );
+    }
+
+
 
     somatorioIntrumentDate(acao: any, data: any): any {
         return lastValueFrom(
